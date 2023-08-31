@@ -24,8 +24,8 @@ def main():
     print()
 
     # Generate a plot of the irradiance and PV production data (data, time resolution, color)
-    plot_irr(input_data_Irr, 'H', 'purple')
-    plot_PVcalc(PV_power, 'H', 'orange')
+    plot_irr(input_data_Irr, 'D', 'purple')
+    plot_PVcalc(PV_power, 'D', 'orange')
 
 
 if __name__ == "__main__":
