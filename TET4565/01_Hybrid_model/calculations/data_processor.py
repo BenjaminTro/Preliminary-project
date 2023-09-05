@@ -5,17 +5,6 @@ import numpy as np
 def read_excel_data(file_path):
     pv_panel = pd.read_excel(file_path, header=[2])
     return pv_panel
-    
-#Reading irradiance data from JRC:
-def read_csv_data(file_path):  
-    irr_data = pd.read_csv(file_path, parse_dates=['time'], index_col='time', dtype=float)  
-    irr_data.index = irr_data.index.str[:-5]
-    irr_data.index = pd.to_datetime(irr_data.index, format='%Y%m%d')
-    irr_data['hours'] = irr_data.groupby(irr_data.index.date).cumcount()
-    irr_data.index = irr_data.index + pd.to_timedelta(irr_data['hours'], unit='h')
-    irr_data.drop(columns='hours', inplace=True)
-    return irr_data
-
 
 def perform_calculation(pv_panel, irr_data):  #implement tilt and azimuth as inputs as well in order to more accurately calculate PV power production (use book from home)
     # Extract specific values from pv_data (assumed to be a DataFrame)
