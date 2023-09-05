@@ -26,8 +26,27 @@ def read_excel_file(filename):
     return df
 
 def read_csv_range(file_path, date_1, date_2):
-    irr_data = pd.read_csv(file_path, parse_dates=[0], dtype=float)
-    
+    df = pd.read_csv(file_path, dtype=float)
+    date_column = None
+    for column in df.columns:
+        try:
+            df[column] = pd.to_datetime(df[column])
+            if date_column is None:
+                date_column = column
+            else:
+                df[column] = df[column].astype(float)  # Convert non-datetime columns to floats
+        except ValueError:
+            pass
+
+    if date_column is None:
+        raise ValueError("No date column found in the CSV file.")
+
+    # Filter the DataFrame to include only rows within the specified date range
+    filtered_df = df[(df[date_column] >= date_1) & (df[date_column] <= date_2)]
+
+    # Sort the DataFrame by the date column
+    sorted_df = filtered_df.sort_values(by=date_column)
+    return sorted_df
     
 def return_specific_date(file_path, date_x, date_y):
     df=pd.read_csv(file_path, parse_dates=['time'], index_col='time', dtype=float) 
@@ -39,19 +58,6 @@ def return_specific_date(file_path, date_x, date_y):
     df.drop(columns='hours', inplace=True)
     mask = df[(df['time'] >= date_x) & (df['time'] <= date_y)]
     return mask
-<<<<<<< HEAD
-    
-rad_data=read_csv_data('data/Data_solar_irr_NOR.csv')
-PV_data=read_excel_file('data/PV_spec.xlsx')
-spec=return_specific_date('data/Data_solar_irr_NOR.csv','2018-01-15','2018-02-09') 
-
-print(rad_data)
-print(PV_data, "\n")
-print(spec)
 
 
-=======
 
-
- 
->>>>>>> 42f797c97d70bb7231f1f433fe709811171ea1e3

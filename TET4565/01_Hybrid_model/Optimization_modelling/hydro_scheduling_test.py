@@ -20,6 +20,7 @@ Pmax = {'Hydro1':41, 'Hydro2':60, 'Solar':30, 'Market':np.inf}
 model.periods = pyo.Set(initialize=[1,2,3,4,5,6,7, 8 , 9 , 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
 
 #Solar production based on forecast (should come from irradiance data)
+
 Solar_p= {1:0, 2:0, 3:0, 4:0, 5:2, 6:5, 7:8, 8:10, 9:12, 10:15, 11:18, 12:22, 13:25, 14:28, 15:30, 16:30, 17:30, 18:25, 19:20, 
         20:15, 21:10, 22:5, 23:0, 24:0}
 
