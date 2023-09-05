@@ -17,7 +17,7 @@ def read_csv_data(file_path):
     return irr_data
 
 
-def perform_calculation(pv_panel, irr_data):
+def perform_calculation(pv_panel, irr_data):  #implement tilt and azimuth as inputs as well in order to more accurately calculate PV power production (use book from home)
     # Extract specific values from pv_data (assumed to be a DataFrame)
     P =  pv_panel.loc[0,'P_max']
     V_oc =  pv_panel.loc[0, 'V_oc']
@@ -37,12 +37,12 @@ def perform_calculation(pv_panel, irr_data):
     irr_ref = irr_data['G(i)'].values
     T = irr_data['T2m'].values
 
-    # Effective irradiance
+    # Effective irradiance (NEED SOURCE)
     irr_eff = irr_ref*(1+alfa*(T-T_ref))
 
     # Panel Power Output
     time_index = irr_data.index
-    PV_power = np.round(P*irr_eff/irr_ref)
+    PV_power = np.round(P*irr_eff/irr_ref)  # (NEED SOURCE FOR THIS EQUATION)
     PV_power = np.nan_to_num(PV_power, nan=0)
     pv_power_df = pd.DataFrame({'PV_power': PV_power}, index=time_index)
     
