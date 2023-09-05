@@ -24,17 +24,6 @@ def read_irr_data(file_path):
 def read_excel_file(filename):
     df=pd.read_excel(filename, header=[2])
     return df
-    
-def return_specific_date(file_path, date_x, date_y):
-    df=pd.read_csv(file_path, parse_dates=['time'], index_col='time', dtype=float) 
-    df.index = df.index.str[:-5]
-    df.index = pd.to_datetime(df.index, format='%Y%m%d')
-    df['time']= pd.to_datetime(df.index, format='%Y%m%d') 
-    df['hours'] = df.groupby(df.index.date).cumcount()
-    df.index = df.index + pd.to_timedelta(df['hours'], unit='h')
-    df.drop(columns='hours', inplace=True)
-    mask = df[(df['time'] >= date_x) & (df['time'] <= date_y)]
-    return mask
 
 
  

@@ -18,7 +18,7 @@ def plot_PVcalc(data, time_resolution, line_color):
 
     fig = px.line(data, x=data.index, y='PV_power', title='PV Power Production')
     fig.update_xaxes(title='Time')
-    fig.update_yaxes(title='Power production (W)')
+    fig.update_yaxes(title='Power production (MW)')
 
     if line_color:
         fig.update_traces(line=dict(color=line_color))
