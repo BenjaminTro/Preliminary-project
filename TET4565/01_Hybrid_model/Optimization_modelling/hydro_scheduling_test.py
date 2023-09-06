@@ -5,6 +5,8 @@ from pyomo.core import Constraint,Var,Block,ConstraintList
 from pyomo.opt import SolverFactory, SolverStatus, TerminationCondition
 import matplotlib.pyplot as plt
 
+#hello world
+
 model = pyo.ConcreteModel()
 
 #Initial costs for plants/market [NOK]
