@@ -5,6 +5,8 @@ from pyomo.core import Constraint,Var,Block,ConstraintList
 from pyomo.opt import SolverFactory, SolverStatus, TerminationCondition
 import matplotlib.pyplot as plt
 
+#hello world
+
 model = pyo.ConcreteModel()
 
 #Initial costs for plants/market [NOK]
@@ -14,6 +16,30 @@ bi={'Hydro1':60, 'Hydro2':100, 'Solar':150, 'Market':130}
 #Production levels / Purchase from market [MW]
 Pmin = {'Hydro1':0, 'Hydro2':0, 'Solar':0, 'Market':0}
 Pmax = {'Hydro1':41, 'Hydro2':60, 'Solar':30, 'Market':np.inf}
+
+#Code for varying market price:
+
+#Cost and production levels for buying from market
+#Fi={'Hydro1':0, 'Hydro2':0, 'Solar':0, 'Market':100}
+#ci={'Hydro1':0, 'Hydro2':0, 'Solar':0, 'Market':0}
+
+#Mmin={'Hydro1':0, 'Hydro2':0, 'Solar':0, 'Market':0}
+#Mmax={'Hydro1':0, 'Hydro2':0, 'Solar':0, 'Market':np.inf}
+
+#Reading of historical data for market prices
+#input_data_market = read_csv_data('data/Market_price.csv')
+#market_price=convert_to_dict(input_data_market, '2018-01-30', '2018-01-30')
+
+#model.market=pyo.Set(initialize=['Hydro1','Hydro2', 'Solar','Market'])
+
+#def m_bounds(model,n,j):
+    #return (Mmin[n],Mmax[n])
+#model.m = pyo.Var(model.market,model.periods, bounds=m_bounds)
+
+#constraint for market price following hourly data
+#def market_rule(model, j):
+    #return ci['Market',j]==market_price[j]
+#model.market_cons=pyo.Constraint(model.periods, rule=market_rule )
 
 
 #Defining periods of 1 hour throughout a day
