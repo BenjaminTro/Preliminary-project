@@ -6,6 +6,7 @@ Created on Wed Aug 30 13:47:40 2023
 """
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 def read_csv_data(file_path):
     csv_data = pd.read_csv(file_path, parse_dates=[0], dtype=float)
@@ -30,7 +31,11 @@ def read_specific_dates(filename, date_1, date_2):
     df=df[date_1 : date_2]
     return df
 
-def convert_to_dict(dataframe, date_1, date_2, timeresolution):
+def dataframe_to_dict(df):
+    result = [df[col_name].to_dict() for col_name in df.columns]
+    return result
+
+def convert_to_dict(dataframe, date_1, date_2, timeresolution, value_columns=None):
     date_1 = pd.to_datetime(date_1)
     date_2 = pd.to_datetime(date_2)
     df_2 = dataframe[date_1:date_2]
@@ -51,12 +56,28 @@ def convert_to_dict(dataframe, date_1, date_2, timeresolution):
     resampled_df = resampled_df.astype(float)
 
     result_dict = {}
+    
+    if value_columns is not None:
+        for column in value_columns:
+            value_dict = {}
+            for i, (_, row) in enumerate(resampled_df.iterrows(), start=1):
+                value_dict[i] = row[column]
+            result_dict[column] = value_dict
+    else:
+        for column in resampled_df.columns:
+            value_dict = {}
+            for i, (_, row) in enumerate(resampled_df.iterrows(), start=1):
+                value_dict[i] = row[column]
+            result_dict[column] = value_dict
 
-    # Iterate through the DataFrame and assign values to keys ranging from 1 to the number of rows
-    for i, (_, row) in enumerate(resampled_df.iterrows(), start=1):
-        result_dict[i] = row[0]  # Convert the row to a list
+    # If only one column is selected, return the inner dictionary directly
+    if len(result_dict) == 1:
+        return result_dict[value_columns[0]] if value_columns else result_dict[resampled_df.columns[0]]
+    
+    # Convert the DataFrame to the desired format when value_columns is not None
+    if value_columns is not None:
+        result_dict = dataframe_to_dict(pd.DataFrame(result_dict))
 
-    # Return the resulting dictionary
     return result_dict
 
 def average_value(dictionary):
@@ -65,6 +86,3 @@ def average_value(dictionary):
     total_sum=sum(dictionary.values())
     avg=total_sum/len(dictionary)
     return avg
-    
-
-
