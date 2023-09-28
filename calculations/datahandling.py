@@ -45,6 +45,8 @@ def convert_to_dict(dataframe, date_1, date_2, timeresolution, value_columns=Non
         resampled_df = df_2
     elif timeresolution == 'D':
         resampled_df = df_2.resample('D').sum()
+    elif timeresolution == 'W':
+        resampled_df = df_2.resample('W').sum()
     elif timeresolution == 'M':
         resampled_df = df_2.resample('M').sum()
     elif timeresolution == 'Y':
@@ -86,3 +88,41 @@ def average_value(dictionary):
     total_sum=sum(dictionary.values())
     avg=total_sum/len(dictionary)
     return avg
+
+def calculate_time_difference(start, end, timeres):
+    # Create datetime objects
+    start_dt = pd.to_datetime(start)
+    end_dt = pd.to_datetime(end)
+
+    # Calculate hours_difference based on time resolution
+    if timeres == 'H':
+        time_difference = int((end_dt - start_dt).total_seconds() / 3600) + 1
+    elif timeres == 'D':
+        days_difference = (end_dt - start_dt).days
+        time_difference = (days_difference + 1) 
+    elif timeres == 'W':
+        weeks_difference = (end_dt - start_dt).days // 7
+        time_difference = (weeks_difference + 1)
+    elif timeres == 'M':
+        months_difference = (end_dt.year - start_dt.year) * 12 + end_dt.month - start_dt.month
+        time_difference = months_difference   # Assuming 30 days per month
+    else:
+        raise ValueError("Unsupported time resolution: {}".format(timeres))
+
+    return time_difference
+
+def scale_value(time_resolution):
+    # Define scaling factors for different time resolutions
+    scaling_factors = {
+        'H': 1,
+        'D': 24,
+        'W': 24 * 7,
+    }
+        # Check if the provided time resolution is valid
+    if time_resolution not in scaling_factors:
+        raise ValueError("Invalid time resolution. Choose from 'hour', 'day', 'week', or 'month'.")
+
+    # Scale the value based on the chosen time resolution
+    scaled_value = scaling_factors[time_resolution]
+
+    return scaled_value
