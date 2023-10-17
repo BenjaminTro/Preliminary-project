@@ -94,6 +94,7 @@ def scale_dict(dictionary, constant):
     for key in dictionary:
         scaled[key]=dictionary[key]*constant
     return scaled 
+
 def calculate_time_difference(start, end, timeres):
     # Create datetime objects
     start_dt = pd.to_datetime(start)
