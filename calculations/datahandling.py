@@ -132,3 +132,44 @@ def scale_value(time_resolution):
     scaled_value = scaling_factors[time_resolution]
 
     return scaled_value
+
+import pandas as pd
+
+def split_data(csv_file):
+    # Read CSV file with the first column as datetime index
+    df = pd.read_csv(csv_file, parse_dates=[0], index_col=0)
+
+    # Create dictionaries for each reservoir
+    reservoir1_data = {}
+    reservoir2_data = {}
+    solar_dict={}
+
+    # Iterate through each year in the DataFrame
+    for year in df.index.year.unique():
+        # Create dictionaries for each reservoir for the current year
+        reservoir1_data[year] = {}
+        reservoir2_data[year] = {}
+        solar_dict[year]={}
+        # Iterate through each hour (1 to 8760)
+        for hour in range(1, 8761):
+            # Get the datetime for the current year and hour
+            current_datetime = pd.Timestamp(f'{year}-01-01') + pd.DateOffset(hours=hour - 1)
+
+            # Check if the datetime exists in the DataFrame
+            if current_datetime in df.index:
+                # Extract inflow values
+                inflow_reservoir1 = df.loc[current_datetime, 'Ormsetvatn']
+                inflow_reservoir2 = df.loc[current_datetime, 'Buavatn']
+                solar_data=df.loc[current_datetime, 'Solar']
+            else:
+                # If the datetime is missing, set inflow values to zero
+                inflow_reservoir1 = 0.0
+                inflow_reservoir2 = 0.0
+                solar_data=0
+
+            # Update dictionaries
+            reservoir1_data[year][hour] = inflow_reservoir1
+            reservoir2_data[year][hour] = inflow_reservoir2
+            solar_dict[year][hour]=solar_data
+
+    return reservoir1_data, reservoir2_data, solar_dict
