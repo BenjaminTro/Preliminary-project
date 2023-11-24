@@ -15,7 +15,7 @@ def read_csv_data(file_path):
 
 def read_irr_data(file_path):  
     irr_data = pd.read_csv(file_path, parse_dates=['time'], index_col='time', dtype=float)  
-    irr_data.index = irr_data.index.str[:-5]
+    #irr_data.index = irr_data.index.str[:-5]
     irr_data.index = pd.to_datetime(irr_data.index, format='%Y%m%d')
     irr_data['hours'] = irr_data.groupby(irr_data.index.date).cumcount()
     irr_data.index = irr_data.index + pd.to_timedelta(irr_data['hours'], unit='h')
@@ -173,3 +173,37 @@ def split_data(csv_file):
             solar_dict[year][hour]=solar_data
 
     return reservoir1_data, reservoir2_data, solar_dict
+
+
+def split_data2(csv_file):
+    # Read CSV file with the first column as datetime index
+    df = pd.read_csv(csv_file, parse_dates=[0], index_col=0)
+
+    # Create dictionaries for each reservoir
+    reservoir1_data = {}
+
+    # Iterate through each year in the DataFrame
+    for year in df.index.year.unique():
+        # Create dictionaries for each reservoir for the current year
+        reservoir1_data[year] = {}
+      
+        # Iterate through each hour (1 to 8760)
+        for hour in range(1, 8761):
+            # Get the datetime for the current year and hour
+            current_datetime = pd.Timestamp(f'{year}-01-01') + pd.DateOffset(hours=hour - 1)
+
+            # Check if the datetime exists in the DataFrame
+            if current_datetime in df.index:
+                # Extract inflow values
+                inflow_reservoir1 = df.loc[current_datetime, 'Hourly Inflow']
+                
+            else:
+                # If the datetime is missing, set inflow values to zero
+                inflow_reservoir1 = 0.0
+             
+
+            # Update dictionaries
+            reservoir1_data[year][hour] = inflow_reservoir1
+        
+
+    return reservoir1_data
