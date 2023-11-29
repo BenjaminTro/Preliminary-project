@@ -174,6 +174,22 @@ def split_data(csv_file):
 
     return reservoir1_data, reservoir2_data, solar_dict
 
+#Create lists for inflow and solar data in order to simulate at a given time period
+def csv_to_dataframe(file_path, start, end):        
+    # Read the CSV file into a DataFrame and set the datetime column as the index
+    df = pd.read_csv(file_path, index_col='Unnamed: 0', parse_dates=True)
+
+    # Extract separate DataFrames for each value column
+    df_Ormsetvatn = df[['Ormsetvatn']].copy()
+    df_Buavatn = df[['Buavatn']].copy()
+    df_Solar = df[['Solar']].copy()
+
+    # Extract values within the specified date range for each column
+    res1_inflow = df_Ormsetvatn.loc[start:end, 'Ormsetvatn'].tolist()
+    res2_inflow = df_Buavatn.loc[start:end, 'Buavatn'].tolist()
+    sol_data = df_Solar.loc[start:end, 'Solar'].tolist()
+
+    return res1_inflow, res2_inflow, sol_data
 
 def split_data2(csv_file):
     # Read CSV file with the first column as datetime index
