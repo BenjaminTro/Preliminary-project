@@ -191,6 +191,11 @@ def csv_to_dataframe(file_path, start, end):
 
     return res1_inflow, res2_inflow, sol_data
 
+def Merge(dict1, dict2):
+    merged_dict = dict1.copy()
+    merged_dict.update(dict2)
+    return merged_dict
+
 def split_data2(csv_file):
     # Read CSV file with the first column as datetime index
     df = pd.read_csv(csv_file, parse_dates=[0], index_col=0)
